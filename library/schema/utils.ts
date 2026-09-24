@@ -13,9 +13,9 @@ import type {
  * throws when the schema is invalid, for example when two properties share an
  * `@id`.
  *
- * Every property becomes an object with its `@id`, a property without `@type`
- * defaults to `xsd:string`, `@type` becomes an array, and nested schemas are
- * expanded too. {@link encode} takes a schema in this form.
+ * Every property becomes an object with its `@id`, a property with neither
+ * `@type` nor `@schema` defaults to `xsd:string`, `@type` becomes an array, and
+ * nested schemas are expanded too. {@link encode} takes a schema in this form.
  *
  * @example
  * ```typescript
@@ -32,8 +32,8 @@ import type {
  * const expandedSchema = expandSchema(PersonSchema);
  * ```
  *
- * @param schemaPrototype data schema which extends {@link Schema}
- * @returns the expanded data schema
+ * @param schemaPrototype Data schema which extends {@link Schema}
+ * @returns Expanded data schema
  */
 export const expandSchema = (schemaPrototype: Schema): ExpandedSchema => {
   if (typeof schemaPrototype !== "object") {

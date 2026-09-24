@@ -11,12 +11,14 @@ type DecodedNode = Record<string, unknown>;
 type NodeId = RDF.NamedNode | RDF.BlankNode;
 
 /**
- * Encodes an entity to RDF quads according to its data schema, the same way
- * {@link Lens.prototype.insert} writes it, without a data source.
+ * Encodes an entity to RDF quads according to its data schema, without a data
+ * source.
  *
- * The schema needs to be expanded first with {@link expandSchema}. A `null`
- * value becomes a variable, which is how {@link Lens.prototype.update} deletes
- * a value.
+ * The quads are the ones {@link Lens.prototype.insert} writes, except that only
+ * the given options apply, not those set with {@link setGlobalOptions}, and no
+ * `defaultGraph` is added. The schema needs to be expanded first with
+ * {@link expandSchema}. A `null` value becomes a variable, which is how
+ * {@link Lens.prototype.update} deletes a value.
  *
  * @example
  * ```typescript
@@ -42,10 +44,10 @@ type NodeId = RDF.NamedNode | RDF.BlankNode;
  * ```
  *
  * @param node Entity to encode
- * @param schema expanded data schema, see {@link expandSchema}
- * @param options optional {@link Options}, of which only `language` applies
- * @param includeType whether to write the `rdf:type` quads
- * @param variableInitCounter the first index of the variables `null` values become
+ * @param schema Expanded data schema, see {@link expandSchema}
+ * @param options Optional {@link Options}, of which only `language` applies
+ * @param includeType Whether to write the `rdf:type` quads
+ * @param variableInitCounter First index of the variables `null` values become
  * @returns RDF quads of the entity
  */
 export const encode = (
