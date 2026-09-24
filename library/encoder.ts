@@ -13,7 +13,7 @@ type NodeId = RDF.NamedNode | RDF.BlankNode;
 export const encode = (
   node: DecodedNode,
   schema: ExpandedSchema,
-  options: Options,
+  options: Options = {},
   includeType = true,
   variableInitCounter = 0,
 ) => {
