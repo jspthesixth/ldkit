@@ -10,13 +10,51 @@ type DecodedNode = Record<string, unknown>;
 
 type NodeId = RDF.NamedNode | RDF.BlankNode;
 
+/**
+ * Encodes an entity to RDF quads according to its data schema, the same way
+ * {@link Lens.prototype.insert} writes it, without a data source.
+ *
+ * The schema needs to be expanded first with {@link expandSchema}. A `null`
+ * value becomes a variable, which is how {@link Lens.prototype.update} deletes
+ * a value.
+ *
+ * @example
+ * ```typescript
+ * import { encode, expandSchema } from "ldkit";
+ * import { schema, xsd } from "ldkit/namespaces";
+ *
+ * // Create a schema
+ * const PersonSchema = {
+ *   "@type": schema.Person,
+ *   name: schema.name,
+ *   birthDate: { "@id": schema.birthDate, "@type": xsd.date },
+ * } as const;
+ *
+ * // Encode a person to RDF quads
+ * const quads = encode(
+ *   {
+ *     $id: "http://example.org/Alan_Turing",
+ *     name: "Alan Turing",
+ *     birthDate: new Date("1912-06-23"),
+ *   },
+ *   expandSchema(PersonSchema),
+ * );
+ * ```
+ *
+ * @param node Entity to encode
+ * @param schema expanded data schema, see {@link expandSchema}
+ * @param options optional {@link Options}, of which only `language` applies
+ * @param includeType whether to write the `rdf:type` quads
+ * @param variableInitCounter the first index of the variables `null` values become
+ * @returns RDF quads of the entity
+ */
 export const encode = (
   node: DecodedNode,
   schema: ExpandedSchema,
   options: Options = {},
   includeType = true,
   variableInitCounter = 0,
-) => {
+): RDF.Quad[] => {
   return Encoder.encode(
     node,
     schema,

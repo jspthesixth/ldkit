@@ -8,7 +8,34 @@ import type {
   Schema,
 } from "./schema.ts";
 
-export const expandSchema = (schemaPrototype: Schema) => {
+/**
+ * Expands a data schema to the full form LDkit works with internally, and
+ * throws when the schema is invalid, for example when two properties share an
+ * `@id`.
+ *
+ * Every property becomes an object with its `@id`, a property without `@type`
+ * defaults to `xsd:string`, `@type` becomes an array, and nested schemas are
+ * expanded too. {@link encode} takes a schema in this form.
+ *
+ * @example
+ * ```typescript
+ * import { expandSchema } from "ldkit";
+ * import { schema } from "ldkit/namespaces";
+ *
+ * // Create a schema
+ * const PersonSchema = {
+ *   "@type": schema.Person,
+ *   name: schema.name,
+ * } as const;
+ *
+ * // Expand the schema
+ * const expandedSchema = expandSchema(PersonSchema);
+ * ```
+ *
+ * @param schemaPrototype data schema which extends {@link Schema}
+ * @returns the expanded data schema
+ */
+export const expandSchema = (schemaPrototype: Schema): ExpandedSchema => {
   if (typeof schemaPrototype !== "object") {
     throw new Error(`Invalid schema, expected object`);
   }
